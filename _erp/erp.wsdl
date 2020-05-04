@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
+		xmlns:tns="a1"
+		xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+		xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns="http://schemas.xmlsoap.org/wsdl/"
+		targetNamespace="a1">
+
+	<types>
+		<xsd:schema targetNamespace="a1">
+			<xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+			<xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+			<xsd:complexType name="Subject">
+				<xsd:all>
+					<xsd:element name="ids" type="xsd:integer"/>
+					<xsd:element name="nameSurname" type="xsd:string"/>
+					<xsd:element name="address" type="xsd:string"/>
+					<xsd:element name="postCode" type="xsd:integer"/>
+					<xsd:element name="taxNumber" type="xsd:integer"/>
+				</xsd:all>
+			</xsd:complexType>
+		</xsd:schema>
+	</types>
+
+	<message name="saveErpRequest">
+		<part name="subject" type="tns:Subject"/>
+	</message>
+
+	<message name="saveErpResponse">
+		<part name="return" type="xsd:string"/>
+	</message>
+
+	<portType name="ErpPort">
+		<operation name="saveErp">
+			<input message="tns:saveErpRequest"/>
+			<output message="tns:saveErpResponse"/>
+		</operation>
+	</portType>
+
+	<binding name="ErpBinding" type="tns:ErpPort">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="saveErp">
+			<soap:operation soapAction="uri:a1/saveErp" style="rpc" />
+			<input>
+				<soap:body use="encoded" namespace="uri:a1" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="uri:a1" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+	</binding>
+
+	<service name="Erp">
+		<port name="ErpPort" binding="tns:ErpBinding">
+			<soap:address location="https://incubator.alcyone.si/soaptest/erp/erp.php"/>
+		</port>
+	</service>
+
+</definitions>

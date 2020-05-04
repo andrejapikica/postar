@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
+		xmlns:tns="a1"
+		xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+		xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns="http://schemas.xmlsoap.org/wsdl/"
+		targetNamespace="a1">
+
+	<types>
+		<xsd:schema targetNamespace="a1">
+			<xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+			<xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+			<xsd:complexType name="Subject">
+				<xsd:all>
+					<xsd:element name="ids" type="xsd:integer"/>
+					<xsd:element name="name" type="xsd:string"/>
+					<xsd:element name="surname" type="xsd:string"/>
+					<xsd:element name="address" type="xsd:string"/>
+					<xsd:element name="postCode" type="xsd:integer"/>
+					<xsd:element name="postName" type="xsd:string"/>
+					<xsd:element name="taxNumber" type="xsd:integer"/>
+					<xsd:element name="phone" type="xsd:string" />
+				</xsd:all>
+			</xsd:complexType>
+		</xsd:schema>
+	</types>
+
+	<message name="redirectRequest">
+		<part name="subject" type="tns:Subject"/>
+	</message>
+
+	<message name="redirectResponse">
+		<part name="return" type="xsd:string"/>
+	</message>
+
+	<portType name="PostarPort">
+		<operation name="redirect">
+			<input message="tns:redirectRequest"/>
+			<output message="tns:redirectResponse"/>
+		</operation>
+	</portType>
+
+	<binding name="PostarBinding" type="tns:PostarPort">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="redirect">
+			<soap:operation soapAction="uri:a1/redirect" style="rpc" />
+			<input>
+				<soap:body use="encoded" namespace="uri:a1" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="uri:a1" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+		</operation>
+	</binding>
+
+	<service name="Postar">
+		<port name="PostarPort" binding="tns:PostarBinding">
+			<soap:address location="https://incubator.alcyone.si/soaptest/postar/postar.php"/>
+		</port>
+	</service>
+
+</definitions>
